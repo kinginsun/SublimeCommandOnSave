@@ -6,20 +6,25 @@ import re
 
 _STATUS_KEY = 'CommandOnSave'
 
+
 class CommandOnSave(sublime_plugin.EventListener):
+
     def on_post_save_async(self, view):
-        settings = sublime.load_settings('CommandOnSave.sublime-settings').get('commands')
+        settings = sublime.load_settings(
+            'CommandOnSave.sublime-settings').get('commands')
         if settings is None:
             return
 
         file = view.file_name()
         before_stat = None
+        cur_viewport = view.viewport_position()
 
         view.erase_status(_STATUS_KEY)
         for path, commands in settings.items():
             if file.startswith(path):
                 for command in commands:
-                    # record the mtime so we can check if we need to reload the file
+                    # record the mtime so we can check if we need to reload the
+                    # file
                     if before_stat is None:
                         before_stat = os.stat(file)
 
@@ -28,9 +33,9 @@ class CommandOnSave(sublime_plugin.EventListener):
                         file,
                         command
                     )
-                    
+
                     process = subprocess.Popen(command,
-                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+                                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
                     output = process.stdout.read()
                     code = process.wait()
                     if code != 0:
@@ -45,3 +50,4 @@ class CommandOnSave(sublime_plugin.EventListener):
             if before_stat.st_mtime != after_stat.st_mtime:
                 # it seems like the file changed: reload the view
                 view.run_command('revert')
+                view.set_viewport_position(cur_viewport)

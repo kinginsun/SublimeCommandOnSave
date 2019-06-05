@@ -49,3 +49,16 @@ Examples
         ]
       }
     }
+
+# 与 Perltidy 整合
+
+{
+  "commands": {
+    "/Users/randyz/Documents/web/db3": [
+      "ff=_file_ && if [ ${ff: -3} == '.pl' ]; then perltidy -b -l=120 ${ff} && rm ${ff}.bak; fi"
+    ],
+    "/Users/randyz/Documents/xanda_api/update": [
+      "ff=_file_ && if [ ${ff: -3} == '.pl' ]; then perltidy -b -l=120 ${ff} && rm ${ff}.bak; fi"
+    ]
+  }
+}
