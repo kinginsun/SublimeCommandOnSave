@@ -50,4 +50,5 @@ class CommandOnSave(sublime_plugin.EventListener):
             if before_stat.st_mtime != after_stat.st_mtime:
                 # it seems like the file changed: reload the view
                 view.run_command('revert')
+                view.show(view.layout_to_text(cur_viewport))
                 view.set_viewport_position(cur_viewport)
