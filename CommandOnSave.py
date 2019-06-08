@@ -3,6 +3,7 @@ import sublime
 import sublime_plugin
 import subprocess
 import re
+import time
 
 _STATUS_KEY = 'CommandOnSave'
 
@@ -51,4 +52,6 @@ class CommandOnSave(sublime_plugin.EventListener):
                 # it seems like the file changed: reload the view
                 view.run_command('revert')
                 view.show(view.layout_to_text(cur_viewport))
+                view.set_viewport_position(cur_viewport)
+                time.sleep(1)
                 view.set_viewport_position(cur_viewport)
